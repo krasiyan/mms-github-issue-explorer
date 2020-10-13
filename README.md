@@ -14,9 +14,13 @@ Node 12 LTS (>=12.19.0) must be installed along with a recent NPM (>=6.14.8) (hi
 Development commands:
 
 ```bash
-npm start     # starts the React dev server @ http://localhost:3000
-npm test      # run all tests
-npm run build # build application (/build)
+npm start            # starts the React dev server @ http://localhost:3000
+npm test             # run all tests
+npm run build        # build application (in /build)
+npm run check:types  # check TypeScript types via tsc
+npm run check:lint   # check codestyle via ESLint
+npm run check:format # check code formatting via Prettier
+npm run check        # run all checkers
 ```
 
 # License

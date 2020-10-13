@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "author":"Krasiyan Nedelchev <hello@krasiyan.com> (https://krasiyan.com)",
+  "author": "Krasiyan Nedelchev <hello@krasiyan.com> (https://krasiyan.com)",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/krasiyan/mms-github-issue-explorer"
+    "type": "git",
+    "url": "https://github.com/krasiyan/mms-github-issue-explorer"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -16,6 +16,9 @@
     "@types/node": "^12.12.67",
     "@types/react": "^16.9.52",
     "@types/react-dom": "^16.9.8",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
@@ -25,10 +28,21 @@
     "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "check:types": "tsc --noEmit",
+    "check:lint": "eslint src/**/*.ts{,x}",
+    "check:format": "prettier --check .",
+    "check": "npm run check:types && npm run check:lint && npm run check:format",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "prettier/@typescript-eslint",
+      "plugin:prettier/recommended"
+    ]
   },
   "browserslist": {
     "production": [
