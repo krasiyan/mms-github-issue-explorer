@@ -23,6 +23,8 @@ npm run check:format # check code formatting via Prettier
 npm run check        # run all checkers
 ```
 
+:information_source: By default a local Git hook is added by `npm` (via [`husky`](https://www.npmjs.com/package/husky)) in order to [lint/standardize the commit messages](https://www.conventionalcommits.org/) (via [`commitlint`](https://commitlint.js.org/)).
+
 # License
 
 [MIT](./LICENSE.md)
