@@ -34,4 +34,11 @@ jobs:
         run: npm run test
 
       - name: Build
+        if: github.ref != 'refs/heads/master'
         run: npm run build
+
+      - name: Build and deploy to GitHub pages
+        if: github.ref == 'refs/heads/master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run deploy:ci
