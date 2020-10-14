@@ -1,3 +1,5 @@
+[![](https://github.com/krasiyan/mms-github-issue-explorer/workflows/cicd/badge.svg)](https://krasiyan.com/mms-github-issue-explorer/)
+
 # MediaMarktSaturn challenge - GitHub issue explorer
 
 # Resources
