@@ -1,0 +1,44 @@
+name: cicd
+
+on: [push]
+
+jobs:
+  test-build-publish:
+    runs-on: ubuntu-latest
+
+    # Potential optimization: the `check`, `test` and `build` jobs can be separated into
+    # their own jobs (thus running them in parallel)
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+
+      - name: Cache node modules
+        id: npm-cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Check code
+        run: npm run check
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        if: github.ref != 'refs/heads/master'
+        run: npm run build
+
+      - name: Build and deploy to GitHub pages
+        if: github.ref == 'refs/heads/master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run deploy:ci

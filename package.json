@@ -1,6 +1,7 @@
 {
   "name": "mms-github-issue-explorer",
   "version": "0.1.0",
+  "homepage": "https://krasiyan.com/mms-github-issue-explorer",
   "private": true,
   "license": "MIT",
   "author": "Krasiyan Nedelchev <hello@krasiyan.com> (https://krasiyan.com)",
@@ -20,6 +21,7 @@
     "@types/react-dom": "^16.9.8",
     "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "gh-pages": "^3.1.0",
     "husky": "^4.3.0",
     "prettier": "^2.1.2",
     "react": "^16.13.1",
@@ -30,6 +32,7 @@
   "scripts": {
     "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
+    "builddeploy": "./scripts/buildDeploy.sh",
     "test": "react-scripts test",
     "check:types": "tsc --noEmit",
     "check:lint": "eslint src/**/*.ts{,x}",
