@@ -41,4 +41,4 @@ jobs:
         if: github.ref == 'refs/heads/master'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run deploy:ci
+        run: npm run builddeploy
