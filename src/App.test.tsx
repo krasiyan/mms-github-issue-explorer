@@ -1,9 +1,8 @@
 import React from "react";
-import { render } from "@testing-library/react";
-import App from "./App";
+import ReactDOM from "react-dom";
+import { App } from "./App";
 
 test("renders the App component", () => {
-  const { getByText } = render(<App />);
-  const headerElement = getByText(/MMS/i);
-  expect(headerElement).toBeInTheDocument();
+  const div = document.createElement("div");
+  ReactDOM.render(<App />, div);
 });
