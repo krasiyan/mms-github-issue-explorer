@@ -9,6 +9,7 @@ import {
 import { Container } from "@material-ui/core";
 
 import { Navigation } from "./Navigation";
+import { Settings } from "./Settings";
 
 export const App: React.FC<{}> = () => (
   <Router>
@@ -16,11 +17,11 @@ export const App: React.FC<{}> = () => (
 
     <Container maxWidth="md">
       <Switch>
-        <Route path="/:issueId">
-          <Issue />
-        </Route>
         <Route path="/settings">
           <Settings />
+        </Route>
+        <Route path="/:issueId">
+          <Issue />
         </Route>
         <Route path="/">
           <IssueList />
@@ -36,4 +37,3 @@ const Issue: React.FC<{}> = () => {
 
   return <h2>Issue: {issueId}</h2>;
 };
-const Settings: React.FC<{}> = () => <h2>Settings</h2>;
