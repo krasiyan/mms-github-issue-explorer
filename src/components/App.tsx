@@ -10,6 +10,7 @@ import { Container } from "@material-ui/core";
 
 import { Navigation } from "./Navigation";
 import { Settings } from "./Settings";
+import { IssueList } from "./IssueList";
 
 export const App: React.FC<{}> = () => (
   <Router>
@@ -31,7 +32,6 @@ export const App: React.FC<{}> = () => (
   </Router>
 );
 
-const IssueList: React.FC<{}> = () => <h2>Issue list</h2>;
 const Issue: React.FC<{}> = () => {
   const { issueId } = useParams();
 
