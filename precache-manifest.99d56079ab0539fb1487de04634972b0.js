@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "3c8fb3408fd45b3aeb16e01b7d6ba423",
+    "revision": "fe68f1801f2fb5b261287972d1969170",
     "url": "/mms-github-issue-explorer/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/mms-github-issue-explorer/static/js/2.6db38bc3.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "9967c2c7d34724831135",
-    "url": "/mms-github-issue-explorer/static/js/main.92af1379.chunk.js"
+    "revision": "56f44f05748d4170f634",
+    "url": "/mms-github-issue-explorer/static/js/main.4ecde060.chunk.js"
   },
   {
     "revision": "3f92685fcfe940fd4457",
