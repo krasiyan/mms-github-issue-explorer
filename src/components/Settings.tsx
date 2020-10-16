@@ -12,6 +12,9 @@ import {
   FormControl,
 } from "@material-ui/core";
 
+import { defaultGitHubRepository } from "../config";
+import { useStickyState } from "../helpers";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -33,11 +36,33 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Settings: React.FC<{}> = () => {
   const classes = useStyles();
-  const [authorizationEnabled, setAuthorizationEnabled] = React.useState<
+
+  const [authorizationEnabled, setAuthorizationEnabled] = useStickyState<
     boolean
-  >(false);
-  const [githubRepository, setGithubRepository] = React.useState<string>("");
-  const [githubToken, setGithubToken] = React.useState<string>("");
+  >("authorizationEnabled", false);
+
+  const [githubRepository, setGithubRepository] = useStickyState<string>(
+    "githubRepository",
+    defaultGitHubRepository
+  );
+
+  const [githubToken, setGithubToken] = useStickyState<string>(
+    "githubToken",
+    ""
+  );
+
+  const handleGitHubRepositoryChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>): void => setGithubRepository(value);
+
+  const handleAuthorizationChange = ({
+    target: { checked },
+  }: React.ChangeEvent<HTMLInputElement>): void =>
+    setAuthorizationEnabled(checked);
+
+  const handleGitHubTokenChange = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>): void => setGithubToken(value);
 
   return (
     <Grid
@@ -54,11 +79,9 @@ export const Settings: React.FC<{}> = () => {
           id="filled-full-width"
           required={true}
           value={githubRepository}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-            setGithubRepository(e.target.value)
-          }
+          onChange={handleGitHubRepositoryChange}
           label="GitHub repository"
-          placeholder="https://github.com/facebook/react"
+          placeholder={defaultGitHubRepository}
           helperText={<span>Enter the full GitHub repository URL</span>}
           InputLabelProps={{
             shrink: true,
@@ -72,11 +95,7 @@ export const Settings: React.FC<{}> = () => {
             <Switch
               checked={authorizationEnabled}
               name="authorizationEnabled"
-              onChange={({
-                target: { checked },
-              }: React.ChangeEvent<HTMLInputElement>): void =>
-                setAuthorizationEnabled(checked)
-              }
+              onChange={handleAuthorizationChange}
             />
           }
           label="Authorized"
@@ -92,11 +111,7 @@ export const Settings: React.FC<{}> = () => {
             label="GitHub personal access token"
             required={true}
             value={githubToken}
-            onChange={({
-              target: { value },
-            }: React.ChangeEvent<HTMLInputElement>): void =>
-              setGithubToken(value)
-            }
+            onChange={handleGitHubTokenChange}
             focused={true}
             autoFocus={true}
             placeholder="token"
