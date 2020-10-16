@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useParams,
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { Container } from "@material-ui/core";
 
@@ -12,6 +7,7 @@ import { Navigation } from "./Navigation";
 import { Settings } from "./Settings";
 import { Search } from "./Search";
 import { IssueList } from "./IssueList";
+import { Issue } from "./Issue";
 
 export const App: React.FC<{}> = () => (
   <Router>
@@ -33,9 +29,3 @@ export const App: React.FC<{}> = () => (
     </Container>
   </Router>
 );
-
-const Issue: React.FC<{}> = () => {
-  const { issueId } = useParams();
-
-  return <h2>Issue: {issueId}</h2>;
-};
