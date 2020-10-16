@@ -56,6 +56,12 @@ export const Settings: React.FC<{}> = () => {
     "githubToken",
     ""
   );
+  const isGithubTokenValid = (): boolean => {
+    return githubToken.length > 0;
+  };
+  const [isGithubTokenTouched, setGithubTokenTouched] = React.useState<boolean>(
+    false
+  );
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
@@ -98,6 +104,7 @@ export const Settings: React.FC<{}> = () => {
             InputLabelProps={{
               shrink: true,
             }}
+            inputProps={{ spellCheck: "false" }}
           />
         </FormControl>
         <FormControl className={classes.field}>
@@ -121,18 +128,22 @@ export const Settings: React.FC<{}> = () => {
           </FormHelperText>
         </FormControl>
         {authorizationEnabled && (
-          <FormControl className={`${classes.field} ${classes.fieldToken}`}>
+          <FormControl
+            error={isGithubTokenTouched && !isGithubTokenValid()}
+            className={`${classes.field} ${classes.fieldToken}`}
+          >
             <TextField
               id="authorizationEnabled"
               label="GitHub personal access token"
               required={true}
+              error={isGithubTokenTouched && !isGithubTokenValid()}
               value={githubToken}
               onChange={({
                 target: { value },
-              }: React.ChangeEvent<HTMLInputElement>): void =>
-                setGithubToken(value)
-              }
-              focused={true}
+              }: React.ChangeEvent<HTMLInputElement>): void => {
+                setGithubToken(value);
+              }}
+              onBlur={(): void => setGithubTokenTouched(true)}
               autoFocus={true}
               placeholder="token"
               helperText={
@@ -152,6 +163,7 @@ export const Settings: React.FC<{}> = () => {
               InputLabelProps={{
                 shrink: true,
               }}
+              inputProps={{ spellCheck: "false" }}
             />
           </FormControl>
         )}
