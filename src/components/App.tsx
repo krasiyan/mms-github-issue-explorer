@@ -10,7 +10,13 @@ import { IssueList } from "./IssueList";
 import { Issue } from "./Issue";
 
 export const App: React.FC<{}> = () => (
-  <Router>
+  <Router
+    basename={
+      // GitHub pages navigation workaround
+      // see https://github.com/rafgraph/spa-github-pages#single-page-apps-for-github-pages
+      process.env.NODE_ENV === "production" ? "/mms-github-issue-explorer" : "/"
+    }
+  >
     <Navigation />
 
     <Container maxWidth="md">
