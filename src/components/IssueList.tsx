@@ -4,7 +4,7 @@ import { useQuery, gql } from "@apollo/client";
 import { LinearProgress, Box } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
-import { Search } from "./Search";
+import { Search, IssueStateFilter } from "./Search";
 import { IssueListItem } from "./IssueListItem";
 import { Error, GithubRepositoryConfigError } from "./Error";
 
@@ -12,9 +12,13 @@ import { readKeyFromLocalStorage } from "../helpers";
 import { defaultGitHubRepository, githubRepositoryRegex } from "../config";
 
 const issuesQuery = gql`
-  query ListIssues($repoName: String!, $repoOwner: String!) {
+  query ListIssues(
+    $repoName: String!
+    $repoOwner: String!
+    $issueStates: [IssueState!]
+  ) {
     repository(name: $repoName, owner: $repoOwner) {
-      issues(last: 10) {
+      issues(last: 10, states: $issueStates) {
         nodes {
           author {
             login
@@ -55,12 +59,20 @@ interface RepositoryIssues {
 const IssueListItems: React.FC<{
   repoOwner: string | undefined;
   repoName: string | undefined;
-}> = ({ repoOwner, repoName }) => {
+  issueStateFilter: IssueStateFilter;
+}> = ({ repoOwner, repoName, issueStateFilter }) => {
+  const issueStates: string[] =
+    issueStateFilter === IssueStateFilter.both
+      ? ["OPEN", "CLOSED"]
+      : issueStateFilter === IssueStateFilter.open
+      ? ["OPEN"]
+      : ["CLOSED"];
   const { loading, error, data } = useQuery<RepositoryIssues>(issuesQuery, {
     skip: !repoOwner || !repoName,
     variables: {
       repoOwner,
       repoName,
+      issueStates,
     },
   });
 
@@ -116,13 +128,20 @@ export const IssueList: React.FC<{}> = () => {
   const repoOwner = githubRepositoryMatch?.groups?.owner;
   const repoName = githubRepositoryMatch?.groups?.name;
 
+  const [issueStateFilter, setIssueStateFilter] = React.useState<
+    IssueStateFilter
+  >(IssueStateFilter.both);
+
   return (
     <Box component="span" m={1}>
-      {repoOwner && repoName && <Search />}
+      {repoOwner && repoName && (
+        <Search {...{ issueStateFilter, setIssueStateFilter }} />
+      )}
       <IssueListItems
         {...{
           repoOwner,
           repoName,
+          issueStateFilter,
         }}
       />
     </Box>

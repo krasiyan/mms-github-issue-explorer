@@ -35,18 +35,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-enum IssueStateFilter {
+export enum IssueStateFilter {
   open = "open",
   closed = "closed",
   both = "both",
 }
 
-export const Search: React.FC<{}> = () => {
+export const Search: React.FC<{
+  issueStateFilter: IssueStateFilter;
+  setIssueStateFilter: React.Dispatch<React.SetStateAction<IssueStateFilter>>;
+}> = ({ issueStateFilter, setIssueStateFilter }) => {
   const classes = useStyles();
-
-  const [issueStateFilter, setIssueStateFilter] = React.useState<
-    IssueStateFilter
-  >(IssueStateFilter.both);
 
   return (
     <div className={classes.root}>
