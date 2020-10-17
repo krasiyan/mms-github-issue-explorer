@@ -18,7 +18,7 @@ const ErrorDetails: React.FC<{ details: string }> = ({ details }) => (
 const UnauthenticatedError: React.FC<{}> = () => (
   <Alert severity="warning">
     <AlertTitle>Missing GitHub access token</AlertTitle>
-    Please set a GitHub personal access token it in the{" "}
+    Please provide a GitHub personal access token in the{" "}
     <RouterLink to="/settings">settings page</RouterLink>.
   </Alert>
 );
@@ -35,7 +35,7 @@ const BadCredentialsError: React.FC<{}> = () => (
 const GraphQLError: React.FC<{ details: string }> = ({ details }) => (
   <Alert severity="error">
     <AlertTitle>GraphQL error</AlertTitle>A GraphQL error has occured - please
-    make sure that the schema is up to date and that the
+    make sure that the schema is up to date and that the{" "}
     <Link
       href={`${packageRepository.url}/actions`}
       target="_blank"
@@ -62,6 +62,14 @@ const OtherError: React.FC<{ details: string }> = ({ details }) => (
       project's repository
     </Link>
     <ErrorDetails details={details} />
+  </Alert>
+);
+
+export const GithubRepositoryConfigError: React.FC<{}> = () => (
+  <Alert severity="error">
+    <AlertTitle>Invalid GitHub repository</AlertTitle>
+    Please set a valid repository URL in the{" "}
+    <RouterLink to="/settings">settings</RouterLink>
   </Alert>
 );
 
