@@ -34,34 +34,78 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface GithubSettingsTextFieldProps {
+  fieldName: string;
+  fieldDefaultValue: string;
+  fieldRegex: RegExp;
+  formControlClassName: string;
+  id: string;
+  label: string;
+  placeholder: string;
+  helperText: React.ReactNode;
+  helperTextError?: React.ReactNode;
+  autoFocus: boolean;
+}
+
+const GithubSettingsTextField: React.FC<GithubSettingsTextFieldProps> = ({
+  fieldName,
+  fieldDefaultValue,
+  fieldRegex,
+  formControlClassName,
+  id,
+  label,
+  placeholder,
+  helperText,
+  helperTextError,
+  autoFocus,
+}) => {
+  const classes = useStyles();
+
+  const [value, setValue] = useStickyState<string>(
+    fieldName,
+    fieldDefaultValue
+  );
+  const isValid = (): boolean => fieldRegex.test(value);
+  const [isTouched, setTouched] = React.useState<boolean>(false);
+
+  return (
+    <FormControl
+      error={isTouched && !isValid()}
+      className={`${classes.field} ${
+        classes[formControlClassName as keyof typeof classes]
+      }`}
+    >
+      <TextField
+        id={id}
+        required={true}
+        error={isTouched && !isValid()}
+        value={value}
+        onChange={({
+          target: { value: newValue },
+        }: React.ChangeEvent<HTMLInputElement>): void => setValue(newValue)}
+        autoFocus={autoFocus}
+        onFocus={!autoFocus ? (): void => setTouched(true) : undefined}
+        onBlur={autoFocus ? (): void => setTouched(true) : undefined}
+        label={label}
+        placeholder={placeholder}
+        helperText={
+          isTouched && !isValid() ? helperTextError || helperText : helperText
+        }
+        InputLabelProps={{
+          shrink: true,
+        }}
+        inputProps={{ spellCheck: "false" }}
+      />
+    </FormControl>
+  );
+};
+
 export const Settings: React.FC<{}> = () => {
   const classes = useStyles();
 
   const [authorizationEnabled, setAuthorizationEnabled] = useStickyState<
     boolean
   >("authorizationEnabled", false);
-
-  const [githubRepository, setGithubRepository] = useStickyState<string>(
-    "githubRepository",
-    defaultGitHubRepository
-  );
-  const isGithubRepositoryValid = (): boolean =>
-    githubRepositoryRegex.test(githubRepository);
-  const [
-    isGithubRepositoryTouched,
-    setGithubRepositoryTouched,
-  ] = React.useState<boolean>(false);
-
-  const [githubToken, setGithubToken] = useStickyState<string>(
-    "githubToken",
-    ""
-  );
-  const isGithubTokenValid = (): boolean => {
-    return githubToken.length > 0;
-  };
-  const [isGithubTokenTouched, setGithubTokenTouched] = React.useState<boolean>(
-    false
-  );
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
@@ -73,40 +117,25 @@ export const Settings: React.FC<{}> = () => {
         justify="space-between"
         alignItems="flex-end"
       >
-        <FormControl
-          error={isGithubRepositoryTouched && !isGithubRepositoryValid()}
-          className={`${classes.field} ${classes.fieldRepository}`}
-        >
-          <TextField
-            id="githubRepository"
-            required={true}
-            error={isGithubRepositoryTouched && !isGithubRepositoryValid()}
-            value={githubRepository}
-            onChange={({
-              target: { value: newGithubRepository },
-            }: React.ChangeEvent<HTMLInputElement>): void =>
-              setGithubRepository(newGithubRepository)
-            }
-            onBlur={(): void => setGithubRepositoryTouched(true)}
-            label="GitHub repository"
-            placeholder={defaultGitHubRepository}
-            helperText={
-              isGithubRepositoryTouched && !isGithubRepositoryValid() ? (
-                <span>Enter the full GitHub repository URL</span>
-              ) : (
-                <span>
-                  Invalid GitHub repository - use the following format:
-                  <br />
-                  <strong>{defaultGitHubRepository}</strong>
-                </span>
-              )
-            }
-            InputLabelProps={{
-              shrink: true,
-            }}
-            inputProps={{ spellCheck: "false" }}
-          />
-        </FormControl>
+        <GithubSettingsTextField
+          fieldName="githubRepository"
+          fieldDefaultValue={defaultGitHubRepository}
+          fieldRegex={githubRepositoryRegex}
+          formControlClassName="fieldRepository"
+          id="githubRepository"
+          label="GitHub repository"
+          placeholder={defaultGitHubRepository}
+          helperText={<span>Enter the full GitHub repository URL</span>}
+          helperTextError={
+            <span>
+              Invalid GitHub repository - use the following format:
+              <br />
+              <strong>{defaultGitHubRepository}</strong>
+            </span>
+          }
+          autoFocus={false}
+        />
+
         <FormControl className={classes.field}>
           <FormLabel component="label">GitHub API authorization</FormLabel>
           <FormControlLabel
@@ -127,45 +156,32 @@ export const Settings: React.FC<{}> = () => {
             Authorizing increases the request limits
           </FormHelperText>
         </FormControl>
+
         {authorizationEnabled && (
-          <FormControl
-            error={isGithubTokenTouched && !isGithubTokenValid()}
-            className={`${classes.field} ${classes.fieldToken}`}
-          >
-            <TextField
-              id="authorizationEnabled"
-              label="GitHub personal access token"
-              required={true}
-              error={isGithubTokenTouched && !isGithubTokenValid()}
-              value={githubToken}
-              onChange={({
-                target: { value },
-              }: React.ChangeEvent<HTMLInputElement>): void => {
-                setGithubToken(value);
-              }}
-              onBlur={(): void => setGithubTokenTouched(true)}
-              autoFocus={true}
-              placeholder="token"
-              helperText={
-                <span>
-                  Create a personal access token on GitHub with the public_repo
-                  scope -{" "}
-                  <Link
-                    href="https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token"
-                    target="_blank"
-                    rel="noopener"
-                    color="primary"
-                  >
-                    official guide
-                  </Link>
-                </span>
-              }
-              InputLabelProps={{
-                shrink: true,
-              }}
-              inputProps={{ spellCheck: "false" }}
-            />
-          </FormControl>
+          <GithubSettingsTextField
+            fieldName="githubToken"
+            fieldDefaultValue={defaultGitHubRepository}
+            fieldRegex={new RegExp("(.+)")}
+            formControlClassName="fieldToken"
+            id="githubToken"
+            label="GitHub personal access token"
+            placeholder="token"
+            helperText={
+              <span>
+                Create a personal access token on GitHub with the public_repo
+                scope -{" "}
+                <Link
+                  href="https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token"
+                  target="_blank"
+                  rel="noopener"
+                  color="primary"
+                >
+                  official guide
+                </Link>
+              </span>
+            }
+            autoFocus={true}
+          />
         )}
       </Grid>
     </form>
