@@ -6,18 +6,16 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 
 import { Search, IssueStateFilter } from "./Search";
 import { IssueListItem } from "./IssueListItem";
-import { Error, GithubRepositoryConfigError } from "./Error";
-
-import { readKeyFromLocalStorage } from "../helpers";
-import { defaultGitHubRepository, githubRepositoryRegex } from "../config";
+import { Error } from "./Error";
+import { GithubConfig, RepositoryIssues } from "./types";
 
 const issuesQuery = gql`
   query ListIssues(
-    $repoName: String!
-    $repoOwner: String!
+    $githubRepositoryName: String!
+    $githubRepositoryOwner: String!
     $issueStates: [IssueState!]
   ) {
-    repository(name: $repoName, owner: $repoOwner) {
+    repository(name: $githubRepositoryName, owner: $githubRepositoryOwner) {
       issues(last: 10, states: $issueStates) {
         nodes {
           author {
@@ -37,30 +35,11 @@ const issuesQuery = gql`
   }
 `;
 
-interface Issue {
-  createdAt: string;
-  state: "OPEN" | "CLOSED";
-  comments: {
-    totalCount: number;
-  };
-  author: {
-    login: string;
-  };
-  title: string;
-  number: number;
-  id: string;
-}
-interface RepositoryIssues {
-  repository: {
-    issues: { nodes: Issue[] };
-  };
-}
-
 const IssueListItems: React.FC<{
-  repoOwner: string | undefined;
-  repoName: string | undefined;
+  githubRepositoryOwner: string;
+  githubRepositoryName: string;
   issueStateFilter: IssueStateFilter;
-}> = ({ repoOwner, repoName, issueStateFilter }) => {
+}> = ({ githubRepositoryOwner, githubRepositoryName, issueStateFilter }) => {
   const issueStates: string[] =
     issueStateFilter === IssueStateFilter.both
       ? ["OPEN", "CLOSED"]
@@ -68,17 +47,13 @@ const IssueListItems: React.FC<{
       ? ["OPEN"]
       : ["CLOSED"];
   const { loading, error, data } = useQuery<RepositoryIssues>(issuesQuery, {
-    skip: !repoOwner || !repoName,
+    skip: !githubRepositoryOwner || !githubRepositoryName,
     variables: {
-      repoOwner,
-      repoName,
+      githubRepositoryOwner,
+      githubRepositoryName,
       issueStates,
     },
   });
-
-  if (!repoOwner || !repoName) {
-    return <GithubRepositoryConfigError />;
-  }
 
   if (loading) return <LinearProgress />;
   if (error) return <Error error={error} />;
@@ -90,7 +65,7 @@ const IssueListItems: React.FC<{
     );
 
   return (
-    <div>
+    <>
       {data.repository.issues.nodes.map(
         ({
           id,
@@ -114,33 +89,24 @@ const IssueListItems: React.FC<{
           />
         )
       )}
-    </div>
+    </>
   );
 };
 
-export const IssueList: React.FC<{}> = () => {
-  const githubRepository = readKeyFromLocalStorage(
-    "githubRepository",
-    defaultGitHubRepository
-  );
-
-  const githubRepositoryMatch = githubRepository.match(githubRepositoryRegex);
-  const repoOwner = githubRepositoryMatch?.groups?.owner;
-  const repoName = githubRepositoryMatch?.groups?.name;
-
+export const IssueList: React.FC<{
+  githubConfig: Required<GithubConfig>;
+}> = ({ githubConfig }) => {
   const [issueStateFilter, setIssueStateFilter] = React.useState<
     IssueStateFilter
   >(IssueStateFilter.both);
 
   return (
     <Box component="span" m={1}>
-      {repoOwner && repoName && (
-        <Search {...{ issueStateFilter, setIssueStateFilter }} />
-      )}
+      <Search {...{ issueStateFilter, setIssueStateFilter }} />
       <IssueListItems
         {...{
-          repoOwner,
-          repoName,
+          githubRepositoryName: githubConfig.repositoryName,
+          githubRepositoryOwner: githubConfig.repositoryOwner,
           issueStateFilter,
         }}
       />

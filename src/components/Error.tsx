@@ -15,7 +15,7 @@ const ErrorDetails: React.FC<{ details: string }> = ({ details }) => (
   </div>
 );
 
-const UnauthenticatedError: React.FC<{}> = () => (
+export const UnauthenticatedError: React.FC<{}> = () => (
   <Alert severity="warning">
     <AlertTitle>Missing GitHub access token</AlertTitle>
     Please provide a GitHub personal access token in the{" "}
