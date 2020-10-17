@@ -1,9 +1,10 @@
 import React from "react";
 
 import { useQuery, gql } from "@apollo/client";
-import { LinearProgress } from "@material-ui/core";
+import { LinearProgress, Box } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
+import { Search } from "./Search";
 import { IssueListItem } from "./IssueListItem";
 import { Error, GithubRepositoryConfigError } from "./Error";
 
@@ -51,16 +52,10 @@ interface RepositoryIssues {
   };
 }
 
-export const IssueList: React.FC<{}> = () => {
-  const githubRepository = readKeyFromLocalStorage(
-    "githubRepository",
-    defaultGitHubRepository
-  );
-
-  const githubRepositoryMatch = githubRepository.match(githubRepositoryRegex);
-  const repoOwner = githubRepositoryMatch?.groups?.owner;
-  const repoName = githubRepositoryMatch?.groups?.name;
-
+const IssueListItems: React.FC<{
+  repoOwner: string | undefined;
+  repoName: string | undefined;
+}> = ({ repoOwner, repoName }) => {
   const { loading, error, data } = useQuery<RepositoryIssues>(issuesQuery, {
     skip: !repoOwner || !repoName,
     variables: {
@@ -108,5 +103,28 @@ export const IssueList: React.FC<{}> = () => {
         )
       )}
     </div>
+  );
+};
+
+export const IssueList: React.FC<{}> = () => {
+  const githubRepository = readKeyFromLocalStorage(
+    "githubRepository",
+    defaultGitHubRepository
+  );
+
+  const githubRepositoryMatch = githubRepository.match(githubRepositoryRegex);
+  const repoOwner = githubRepositoryMatch?.groups?.owner;
+  const repoName = githubRepositoryMatch?.groups?.name;
+
+  return (
+    <Box component="span" m={1}>
+      {repoOwner && repoName && <Search />}
+      <IssueListItems
+        {...{
+          repoOwner,
+          repoName,
+        }}
+      />
+    </Box>
   );
 };

@@ -5,7 +5,6 @@ import { Container } from "@material-ui/core";
 
 import { Navigation } from "./Navigation";
 import { Settings } from "./Settings";
-import { Search } from "./Search";
 import { IssueList } from "./IssueList";
 import { Issue } from "./Issue";
 
@@ -28,7 +27,6 @@ export const App: React.FC<{}> = () => (
           <Issue />
         </Route>
         <Route path="/">
-          <Search />
           <IssueList />
         </Route>
       </Switch>
