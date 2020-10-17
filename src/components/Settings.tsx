@@ -8,9 +8,6 @@ import { useStickyState } from "../helpers";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      margin: "0 auto",
-    },
     field: {
       marginTop: theme.spacing(3),
       marginLeft: theme.spacing(2),
@@ -75,59 +72,55 @@ const GithubSettingsTextField: React.FC<GithubSettingsTextFieldProps> = ({
   );
 };
 
-export const Settings: React.FC<{}> = () => {
-  const classes = useStyles();
+export const Settings: React.FC<{}> = () => (
+  <form noValidate autoComplete="off">
+    <Grid
+      container
+      item={true}
+      md={10}
+      wrap="wrap"
+      justify="space-between"
+      alignItems="flex-end"
+    >
+      <GithubSettingsTextField
+        fieldName="githubRepository"
+        fieldDefaultValue={defaultGitHubRepository}
+        fieldRegex={githubRepositoryRegex}
+        id="githubRepository"
+        label="GitHub repository"
+        placeholder={defaultGitHubRepository}
+        helperText={<span>Enter the full GitHub repository URL</span>}
+        helperTextError={
+          <span>
+            Invalid GitHub repository - use the following format:
+            <br />
+            <strong>{defaultGitHubRepository}</strong>
+          </span>
+        }
+      />
 
-  return (
-    <form className={classes.root} noValidate autoComplete="off">
-      <Grid
-        container
-        item={true}
-        md={10}
-        wrap="wrap"
-        justify="space-between"
-        alignItems="flex-end"
-      >
-        <GithubSettingsTextField
-          fieldName="githubRepository"
-          fieldDefaultValue={defaultGitHubRepository}
-          fieldRegex={githubRepositoryRegex}
-          id="githubRepository"
-          label="GitHub repository"
-          placeholder={defaultGitHubRepository}
-          helperText={<span>Enter the full GitHub repository URL</span>}
-          helperTextError={
-            <span>
-              Invalid GitHub repository - use the following format:
-              <br />
-              <strong>{defaultGitHubRepository}</strong>
-            </span>
-          }
-        />
-
-        <GithubSettingsTextField
-          fieldName="githubToken"
-          fieldDefaultValue={defaultGitHubRepository}
-          fieldRegex={new RegExp("(.+)")}
-          id="githubToken"
-          label="GitHub personal access token"
-          placeholder="token"
-          helperText={
-            <span>
-              Create a personal access token on GitHub with the public_repo
-              scope -{" "}
-              <Link
-                href="https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token"
-                target="_blank"
-                rel="noopener"
-                color="primary"
-              >
-                official guide
-              </Link>
-            </span>
-          }
-        />
-      </Grid>
-    </form>
-  );
-};
+      <GithubSettingsTextField
+        fieldName="githubToken"
+        fieldDefaultValue={defaultGitHubRepository}
+        fieldRegex={new RegExp("(.+)")}
+        id="githubToken"
+        label="GitHub personal access token"
+        placeholder="token"
+        helperText={
+          <span>
+            Create a personal access token on GitHub with the public_repo scope
+            -{" "}
+            <Link
+              href="https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token"
+              target="_blank"
+              rel="noopener"
+              color="primary"
+            >
+              official guide
+            </Link>
+          </span>
+        }
+      />
+    </Grid>
+  </form>
+);

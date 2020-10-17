@@ -101,7 +101,7 @@ export const IssueList: React.FC<{
   >(IssueStateFilter.both);
 
   return (
-    <Box component="span" m={1}>
+    <>
       <Search {...{ issueStateFilter, setIssueStateFilter }} />
       <IssueListItems
         {...{
@@ -110,6 +110,6 @@ export const IssueList: React.FC<{
           issueStateFilter,
         }}
       />
-    </Box>
+    </>
   );
 };

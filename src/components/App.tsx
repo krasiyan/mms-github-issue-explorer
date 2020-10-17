@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { Container } from "@material-ui/core";
 
+import "./app.css";
 import { Navigation } from "./Navigation";
 import { Settings } from "./Settings";
 import { IssueList } from "./IssueList";

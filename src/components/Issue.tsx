@@ -19,10 +19,6 @@ import { IssueComment } from "./IssueComment";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      margin: `${theme.spacing(2)}px auto`,
-      padding: theme.spacing(1),
-    },
     issueStatusChip: {
       color: "white",
       backgroundColor: green[400],
@@ -38,7 +34,7 @@ export const Issue: React.FC<{}> = () => {
   const classes = useStyles();
 
   return (
-    <Grid container direction="column" spacing={2} className={classes.root}>
+    <Grid container direction="column" spacing={2}>
       <Grid item>
         <Card variant="outlined">
           <CardHeader

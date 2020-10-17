@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       minWidth: 275,
-      margin: `${theme.spacing(2)}px auto`,
+      margin: `0px auto ${theme.spacing(2)}px auto`,
     },
     cardContent: {
       paddingLeft: 0,

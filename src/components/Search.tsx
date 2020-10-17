@@ -14,23 +14,18 @@ import { green, red } from "@material-ui/core/colors";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      margin: `${theme.spacing(2)}px auto`,
+      margin: `0 auto`,
       "text-align": "right",
     },
     issueStateFilter: {
       marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2),
     },
     radioGreen: {
       color: green[400],
-      "&$checked": {
-        color: green[600],
-      },
     },
     radioRed: {
       color: red[400],
-      "&$checked": {
-        color: red[600],
-      },
     },
   })
 );
