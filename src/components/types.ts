@@ -5,7 +5,7 @@ export interface GithubConfig {
   repositoryName?: string;
 }
 
-interface Issue {
+interface GQLListIssue {
   createdAt: string;
   state: "OPEN" | "CLOSED";
   comments: {
@@ -18,8 +18,25 @@ interface Issue {
   number: number;
   id: string;
 }
-export interface RepositoryIssues {
+
+export interface GQLListIssues {
   repository: {
-    issues: { nodes: Issue[] };
+    issues: { nodes: GQLListIssue[] };
+  };
+}
+
+interface GQLIssue extends GQLListIssue {
+  url: string;
+  author: {
+    login: string;
+    avatarUrl: string;
+    url: string;
+  };
+  bodyHTML: string;
+}
+
+export interface GQLGetIssue {
+  repository: {
+    issue: GQLIssue;
   };
 }

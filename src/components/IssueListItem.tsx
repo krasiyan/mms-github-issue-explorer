@@ -58,7 +58,7 @@ export const IssueListItem: React.FC<IssueProps> = ({
 
   return (
     <Card className={classes.root} variant="outlined">
-      <CardActionArea component={RouterLink} to="/123">
+      <CardActionArea component={RouterLink} to={`/${number}`}>
         <CardContent className={classes.cardContent}>
           <Grid container justify="space-between" alignItems="stretch">
             <Grid

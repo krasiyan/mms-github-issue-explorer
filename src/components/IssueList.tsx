@@ -1,13 +1,13 @@
 import React from "react";
 
 import { useQuery, gql } from "@apollo/client";
-import { LinearProgress, Box } from "@material-ui/core";
+import { LinearProgress } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
 import { Search, IssueStateFilter } from "./Search";
 import { IssueListItem } from "./IssueListItem";
 import { Error } from "./Error";
-import { GithubConfig, RepositoryIssues } from "./types";
+import { GithubConfig, GQLListIssues } from "./types";
 
 const issuesQuery = gql`
   query ListIssues(
@@ -46,8 +46,7 @@ const IssueListItems: React.FC<{
       : issueStateFilter === IssueStateFilter.open
       ? ["OPEN"]
       : ["CLOSED"];
-  const { loading, error, data } = useQuery<RepositoryIssues>(issuesQuery, {
-    skip: !githubRepositoryOwner || !githubRepositoryName,
+  const { loading, error, data } = useQuery<GQLListIssues>(issuesQuery, {
     variables: {
       githubRepositoryOwner,
       githubRepositoryName,

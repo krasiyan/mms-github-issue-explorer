@@ -60,9 +60,9 @@ export const App: React.FC<{}> = () => {
           <Route path="/settings">
             <Settings />
           </Route>
-          <Route path="/:issueId">
+          <Route path="/:issueNumber">
             <AuthWrapper githubConfig={githubConfig}>
-              <Issue />
+              <Issue githubConfig={githubConfig as Required<GithubConfig>} />
             </AuthWrapper>
           </Route>
           <Route path="/">
