@@ -27,7 +27,20 @@ export const createApolloClient = (): ApolloClient<NormalizedCacheObject> => {
 
   return new ApolloClient({
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        // the user (`author` prop) `login` (username) is distinct no matter if
+        // the user data is fetched from the `GetIssue` query or the `SearchIssues`
+        User: {
+          keyFields: ["login"],
+        },
+        // `Repository` queries are the ones for fetching single issues (`GetIssue`)
+        // hence the nested `id` prop. of the issue should be used as the cache key
+        Repository: {
+          keyFields: [["id"]],
+        },
+      },
+    }),
     connectToDevTools: true,
   });
 };
