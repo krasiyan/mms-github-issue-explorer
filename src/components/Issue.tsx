@@ -23,6 +23,7 @@ import { green, red } from "@material-ui/core/colors";
 
 import { Error } from "./Error";
 import { IssueComment } from "./IssueComment";
+import { CommentBody } from "./CommentBody";
 import { GithubConfig, GQLGetIssue } from "./types";
 
 const issueQuery = gql`
@@ -149,7 +150,9 @@ export const Issue: React.FC<{
               </Grid>
             }
           />
-          <CardContent>{issue.bodyHTML}</CardContent>
+          <CardContent>
+            <CommentBody bodyHTML={issue.bodyHTML} />
+          </CardContent>
         </Card>
       </Grid>
 
