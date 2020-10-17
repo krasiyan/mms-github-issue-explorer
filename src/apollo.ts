@@ -28,5 +28,6 @@ export const createApolloClient = (): ApolloClient<NormalizedCacheObject> => {
   return new ApolloClient({
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
+    connectToDevTools: true,
   });
 };
