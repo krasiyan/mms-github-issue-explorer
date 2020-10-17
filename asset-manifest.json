@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/mms-github-issue-explorer/static/js/main.4ecde060.chunk.js",
-    "main.js.map": "/mms-github-issue-explorer/static/js/main.4ecde060.chunk.js.map",
+    "main.js": "/mms-github-issue-explorer/static/js/main.331f270e.chunk.js",
+    "main.js.map": "/mms-github-issue-explorer/static/js/main.331f270e.chunk.js.map",
     "runtime-main.js": "/mms-github-issue-explorer/static/js/runtime-main.9c3326ad.js",
     "runtime-main.js.map": "/mms-github-issue-explorer/static/js/runtime-main.9c3326ad.js.map",
-    "static/js/2.6db38bc3.chunk.js": "/mms-github-issue-explorer/static/js/2.6db38bc3.chunk.js",
-    "static/js/2.6db38bc3.chunk.js.map": "/mms-github-issue-explorer/static/js/2.6db38bc3.chunk.js.map",
+    "static/js/2.e0022279.chunk.js": "/mms-github-issue-explorer/static/js/2.e0022279.chunk.js",
+    "static/js/2.e0022279.chunk.js.map": "/mms-github-issue-explorer/static/js/2.e0022279.chunk.js.map",
     "index.html": "/mms-github-issue-explorer/index.html",
-    "precache-manifest.99d56079ab0539fb1487de04634972b0.js": "/mms-github-issue-explorer/precache-manifest.99d56079ab0539fb1487de04634972b0.js",
+    "precache-manifest.8245a75d1f0b83397f2282dcf7cda799.js": "/mms-github-issue-explorer/precache-manifest.8245a75d1f0b83397f2282dcf7cda799.js",
     "service-worker.js": "/mms-github-issue-explorer/service-worker.js",
-    "static/js/2.6db38bc3.chunk.js.LICENSE.txt": "/mms-github-issue-explorer/static/js/2.6db38bc3.chunk.js.LICENSE.txt"
+    "static/js/2.e0022279.chunk.js.LICENSE.txt": "/mms-github-issue-explorer/static/js/2.e0022279.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.9c3326ad.js",
-    "static/js/2.6db38bc3.chunk.js",
-    "static/js/main.4ecde060.chunk.js"
+    "static/js/2.e0022279.chunk.js",
+    "static/js/main.331f270e.chunk.js"
   ]
 }
