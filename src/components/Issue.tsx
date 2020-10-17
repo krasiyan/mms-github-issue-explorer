@@ -37,6 +37,7 @@ const issueQuery = gql`
         id
         number
         state
+        title
         url
         author {
           avatarUrl(size: 40)

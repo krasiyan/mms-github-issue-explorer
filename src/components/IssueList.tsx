@@ -10,14 +10,10 @@ import { Error } from "./Error";
 import { GithubConfig, GQLListIssues } from "./types";
 
 const issuesQuery = gql`
-  query ListIssues(
-    $githubRepositoryName: String!
-    $githubRepositoryOwner: String!
-    $issueStates: [IssueState!]
-  ) {
-    repository(name: $githubRepositoryName, owner: $githubRepositoryOwner) {
-      issues(last: 10, states: $issueStates) {
-        nodes {
+  query SearchIssues($query: String!) {
+    search(type: ISSUE, query: $query, last: 100) {
+      nodes {
+        ... on Issue {
           author {
             login
           }
@@ -39,24 +35,35 @@ const IssueListItems: React.FC<{
   githubRepositoryOwner: string;
   githubRepositoryName: string;
   issueStateFilter: IssueStateFilter;
-}> = ({ githubRepositoryOwner, githubRepositoryName, issueStateFilter }) => {
-  const issueStates: string[] =
-    issueStateFilter === IssueStateFilter.both
-      ? ["OPEN", "CLOSED"]
-      : issueStateFilter === IssueStateFilter.open
-      ? ["OPEN"]
-      : ["CLOSED"];
+  issueTextFilter: string;
+}> = ({
+  githubRepositoryOwner,
+  githubRepositoryName,
+  issueStateFilter,
+  issueTextFilter,
+}) => {
+  const query: string[] = [
+    `repo:${githubRepositoryOwner}/${githubRepositoryName}`,
+    `is:issue`,
+    `sort:created`,
+    issueTextFilter,
+  ];
+
+  if (issueStateFilter === IssueStateFilter.open) {
+    query.push("is:open");
+  } else if (issueStateFilter === IssueStateFilter.closed) {
+    query.push("is:closed");
+  }
+
   const { loading, error, data } = useQuery<GQLListIssues>(issuesQuery, {
     variables: {
-      githubRepositoryOwner,
-      githubRepositoryName,
-      issueStates,
+      query: query.join(" "),
     },
   });
 
   if (loading) return <LinearProgress />;
   if (error) return <Error error={error} />;
-  if (!data || data.repository.issues.nodes.length === 0)
+  if (!data || data.search.nodes.length === 0)
     return (
       <Alert severity="info">
         <AlertTitle>No issues found</AlertTitle>
@@ -65,7 +72,7 @@ const IssueListItems: React.FC<{
 
   return (
     <>
-      {data.repository.issues.nodes.map(
+      {data.search.nodes.map(
         ({
           id,
           number,
@@ -99,14 +106,24 @@ export const IssueList: React.FC<{
     IssueStateFilter
   >(IssueStateFilter.both);
 
+  const [issueTextFilter, setIssueTextFilter] = React.useState<string>("");
+
   return (
     <>
-      <Search {...{ issueStateFilter, setIssueStateFilter }} />
+      <Search
+        {...{
+          issueStateFilter,
+          setIssueStateFilter,
+          issueTextFilter,
+          setIssueTextFilter,
+        }}
+      />
       <IssueListItems
         {...{
           githubRepositoryName: githubConfig.repositoryName,
           githubRepositoryOwner: githubConfig.repositoryOwner,
           issueStateFilter,
+          issueTextFilter,
         }}
       />
     </>

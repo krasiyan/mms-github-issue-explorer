@@ -20,8 +20,8 @@ interface GQLListIssue {
 }
 
 export interface GQLListIssues {
-  repository: {
-    issues: { nodes: GQLListIssue[] };
+  search: {
+    nodes: GQLListIssue[];
   };
 }
 

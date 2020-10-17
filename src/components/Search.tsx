@@ -39,12 +39,33 @@ export enum IssueStateFilter {
 export const Search: React.FC<{
   issueStateFilter: IssueStateFilter;
   setIssueStateFilter: React.Dispatch<React.SetStateAction<IssueStateFilter>>;
-}> = ({ issueStateFilter, setIssueStateFilter }) => {
+  issueTextFilter: string;
+  setIssueTextFilter: React.Dispatch<React.SetStateAction<string>>;
+}> = ({
+  issueStateFilter,
+  setIssueStateFilter,
+  issueTextFilter,
+  setIssueTextFilter,
+}) => {
   const classes = useStyles();
+
+  const [currentSearchValue, setCurrentSearchValue] = React.useState<string>(
+    ""
+  );
 
   return (
     <div className={classes.root}>
-      <SearchBar />
+      <SearchBar
+        cancelOnEscape={true}
+        value={issueTextFilter}
+        onChange={(value): void => setCurrentSearchValue(value)}
+        onRequestSearch={(): void => setIssueTextFilter(currentSearchValue)}
+        onCancelSearch={(): void => {
+          console.log("cancel");
+          setIssueTextFilter("");
+          setCurrentSearchValue("");
+        }}
+      />
       <FormControl component="fieldset" className={classes.issueStateFilter}>
         <RadioGroup
           row
