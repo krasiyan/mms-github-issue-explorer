@@ -6,6 +6,7 @@ import {
 } from "@apollo/client";
 
 import { setContext } from "@apollo/client/link/context";
+import { relayStylePagination } from "@apollo/client/utilities";
 
 import { githubGraphQLEndpoint } from "./config";
 import { readKeyFromLocalStorage } from "./helpers";
@@ -38,6 +39,12 @@ export const createApolloClient = (): ApolloClient<NormalizedCacheObject> => {
         // hence the nested `id` prop. of the issue should be used as the cache key
         Repository: {
           keyFields: [["id"]],
+        },
+        Issue: {
+          fields: {
+            // pagination policy for comment retrieval
+            comments: relayStylePagination([["issueNumber"]]),
+          },
         },
       },
     }),

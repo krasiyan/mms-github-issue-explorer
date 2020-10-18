@@ -11,6 +11,13 @@ interface Author {
   url: string;
 }
 
+interface PageInfo {
+  startCursor: string;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+  endCursor: string;
+}
+
 interface GQLListIssue {
   createdAt: string;
   state: "OPEN" | "CLOSED";
@@ -48,12 +55,17 @@ interface GQLIssueComment {
   bodyHTML: string;
 }
 
+interface GQLIssueCommentEdge {
+  node: GQLIssueComment;
+}
+
 export interface GQLIssueComments {
   repository: {
     issue: {
       id: string;
       comments: {
-        nodes: GQLIssueComment[];
+        edges: GQLIssueCommentEdge[];
+        pageInfo: PageInfo;
       };
     };
   };
