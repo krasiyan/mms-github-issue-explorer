@@ -4,7 +4,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Grid, Link, TextField, FormControl } from "@material-ui/core";
 
 import { defaultGitHubRepository, githubRepositoryRegex } from "../config";
-import { useStickyState } from "../helpers";
+import { GithubConfig } from "./types";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,10 +18,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface GithubSettingsTextFieldProps {
-  fieldName: string;
-  fieldDefaultValue: string;
-  fieldRegex: RegExp;
   id: string;
+  value?: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  fieldRegex: RegExp;
   label: string;
   placeholder: string;
   helperText: React.ReactNode;
@@ -29,10 +29,10 @@ interface GithubSettingsTextFieldProps {
 }
 
 const GithubSettingsTextField: React.FC<GithubSettingsTextFieldProps> = ({
-  fieldName,
-  fieldDefaultValue,
-  fieldRegex,
   id,
+  value,
+  setValue,
+  fieldRegex,
   label,
   placeholder,
   helperText,
@@ -40,11 +40,7 @@ const GithubSettingsTextField: React.FC<GithubSettingsTextFieldProps> = ({
 }) => {
   const classes = useStyles();
 
-  const [value, setValue] = useStickyState<string>(
-    fieldName,
-    fieldDefaultValue
-  );
-  const isValid = (): boolean => fieldRegex.test(value);
+  const isValid = (): boolean => fieldRegex.test(value || "");
   const [isTouched, setTouched] = React.useState<boolean>(false);
 
   return (
@@ -72,7 +68,9 @@ const GithubSettingsTextField: React.FC<GithubSettingsTextFieldProps> = ({
   );
 };
 
-export const Settings: React.FC<{}> = () => (
+export const Settings: React.FC<{
+  githubConfig: GithubConfig;
+}> = ({ githubConfig }) => (
   <form noValidate autoComplete="off">
     <Grid
       container
@@ -83,10 +81,10 @@ export const Settings: React.FC<{}> = () => (
       alignItems="flex-end"
     >
       <GithubSettingsTextField
-        fieldName="githubRepository"
-        fieldDefaultValue={defaultGitHubRepository}
-        fieldRegex={githubRepositoryRegex}
         id="githubRepository"
+        value={githubConfig.repositoryUrl}
+        setValue={githubConfig.setRepositoryUrl}
+        fieldRegex={githubRepositoryRegex}
         label="GitHub repository"
         placeholder={defaultGitHubRepository}
         helperText={<span>Enter the full GitHub repository URL</span>}
@@ -100,10 +98,10 @@ export const Settings: React.FC<{}> = () => (
       />
 
       <GithubSettingsTextField
-        fieldName="githubToken"
-        fieldDefaultValue={""}
-        fieldRegex={new RegExp("(.+)")}
         id="githubToken"
+        value={githubConfig.token}
+        setValue={githubConfig.setToken}
+        fieldRegex={new RegExp("(.+)")}
         label="GitHub personal access token"
         placeholder="token"
         helperText={
