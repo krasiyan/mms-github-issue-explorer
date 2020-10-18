@@ -51,7 +51,6 @@ export const Search: React.FC<{}> = () => {
           issueTextFilter(currentSearchValue);
         }}
         onCancelSearch={(): void => {
-          console.log("cancel");
           issueTextFilter("");
           setCurrentSearchValue("");
         }}
