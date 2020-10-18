@@ -1,9 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { ApolloProvider } from "@apollo/client";
 
 import { Container } from "@material-ui/core";
 
-import "./app.css";
+import { createApolloClient } from "../apollo";
 import { Navigation } from "./Navigation";
 import { Settings } from "./Settings";
 import { IssueList } from "./IssueList";
@@ -13,6 +14,7 @@ import { UnauthenticatedError, GithubRepositoryConfigError } from "./Error";
 import { useStickyState } from "../helpers";
 import { defaultGitHubRepository, githubRepositoryRegex } from "../config";
 import { GithubConfig } from "./types";
+import "./app.css";
 
 const AuthWrapper: React.FC<{
   githubConfig: GithubConfig;
@@ -28,6 +30,11 @@ const AuthWrapper: React.FC<{
 };
 
 export const App: React.FC<{}> = () => {
+  const apolloClient = createApolloClient();
+  const deleteApolloCache = (): void => {
+    apolloClient.resetStore();
+  };
+
   const [githubRepositoryUrl, setGithubRepositoryUrl] = useStickyState<string>(
     "githubRepositoryUrl",
     defaultGitHubRepository
@@ -49,37 +56,41 @@ export const App: React.FC<{}> = () => {
     repositoryName: githubRepositoryMatch?.groups?.name,
   };
 
-  return (
-    <Router
-      basename={
-        // GitHub pages navigation workaround
-        // see https://github.com/rafgraph/spa-github-pages#single-page-apps-for-github-pages
-        process.env.NODE_ENV === "production"
-          ? "/mms-github-issue-explorer"
-          : "/"
-      }
-    >
-      <Navigation />
+  React.useEffect(deleteApolloCache, [githubRepositoryUrl, githubToken]);
 
-      <Container maxWidth="md">
-        <Switch>
-          <Route path="/settings">
-            <Settings githubConfig={githubConfig} />
-          </Route>
-          <Route path="/:issueNumber">
-            <AuthWrapper githubConfig={githubConfig}>
-              <Issue githubConfig={githubConfig as Required<GithubConfig>} />
-            </AuthWrapper>
-          </Route>
-          <Route path="/">
-            <AuthWrapper githubConfig={githubConfig}>
-              <IssueList
-                githubConfig={githubConfig as Required<GithubConfig>}
-              />
-            </AuthWrapper>
-          </Route>
-        </Switch>
-      </Container>
-    </Router>
+  return (
+    <ApolloProvider client={apolloClient}>
+      <Router
+        basename={
+          // GitHub pages navigation workaround
+          // see https://github.com/rafgraph/spa-github-pages#single-page-apps-for-github-pages
+          process.env.NODE_ENV === "production"
+            ? "/mms-github-issue-explorer"
+            : "/"
+        }
+      >
+        <Navigation />
+
+        <Container maxWidth="md">
+          <Switch>
+            <Route path="/settings">
+              <Settings githubConfig={githubConfig} />
+            </Route>
+            <Route path="/:issueNumber">
+              <AuthWrapper githubConfig={githubConfig}>
+                <Issue githubConfig={githubConfig as Required<GithubConfig>} />
+              </AuthWrapper>
+            </Route>
+            <Route path="/">
+              <AuthWrapper githubConfig={githubConfig}>
+                <IssueList
+                  githubConfig={githubConfig as Required<GithubConfig>}
+                />
+              </AuthWrapper>
+            </Route>
+          </Switch>
+        </Container>
+      </Router>
+    </ApolloProvider>
   );
 };
