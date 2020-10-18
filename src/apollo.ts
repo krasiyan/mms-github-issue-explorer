@@ -11,7 +11,7 @@ import { relayStylePagination } from "@apollo/client/utilities";
 
 import { githubGraphQLEndpoint } from "./config";
 import { readKeyFromLocalStorage } from "./helpers";
-import { IssueStateFilter } from "./components/Search";
+import { IssueStateFilter } from "./types";
 
 export const createApolloClient = (): ApolloClient<NormalizedCacheObject> => {
   const httpLink = createHttpLink({

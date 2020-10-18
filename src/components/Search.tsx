@@ -4,6 +4,7 @@ import { useReactiveVar } from "@apollo/client";
 import SearchBar from "material-ui-search-bar";
 
 import { issueTextFilter, issueStateFilter } from "../apollo";
+import { IssueStateFilter } from "../types";
 
 import {
   FormControl,
@@ -32,12 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-export enum IssueStateFilter {
-  open = "open",
-  closed = "closed",
-  both = "both",
-}
 
 export const Search: React.FC<{}> = () => {
   const classes = useStyles();

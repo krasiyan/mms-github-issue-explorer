@@ -8,9 +8,9 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 import { issueTextFilter, issueStateFilter } from "../apollo";
 import { graphQLPollingInterval } from "../config";
 import { SearchIssues, SearchIssuesRes } from "../graphql";
-import { GithubConfig } from "../types";
+import { GithubConfig, IssueStateFilter } from "../types";
 
-import { Search, IssueStateFilter } from "./Search";
+import { Search } from "./Search";
 import { IssueListItem } from "./IssueListItem";
 import { LoadMore } from "./LoadMore";
 import { Error } from "./Error";
