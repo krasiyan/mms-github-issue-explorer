@@ -1,13 +1,20 @@
 import React from "react";
 
-export const useStickyState = <T extends unknown>(
+export const readKeyFromLocalStorage = <T>(
+  localStorageKey: string,
+  defaultValue: T
+): T => {
+  const localStorageValue = localStorage.getItem(localStorageKey);
+  return localStorageValue
+    ? (JSON.parse(localStorageValue) as T)
+    : defaultValue;
+};
+
+export const useStickyState = <T>(
   localStorageKey: string,
   defaultValue: T
 ): [T, React.Dispatch<React.SetStateAction<T>>] => {
-  const localStorageValue = localStorage.getItem(localStorageKey);
-  const initialValue = localStorageValue
-    ? (JSON.parse(localStorageValue) as T)
-    : defaultValue;
+  const initialValue = readKeyFromLocalStorage(localStorageKey, defaultValue);
 
   const [value, setValue] = React.useState<T>(initialValue);
 

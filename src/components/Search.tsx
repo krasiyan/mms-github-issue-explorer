@@ -14,44 +14,58 @@ import { green, red } from "@material-ui/core/colors";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      margin: `${theme.spacing(2)}px auto`,
-      paddingTop: theme.spacing(2),
+      margin: `0 auto`,
       "text-align": "right",
     },
     issueStateFilter: {
       marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2),
     },
     radioGreen: {
       color: green[400],
-      "&$checked": {
-        color: green[600],
-      },
     },
     radioRed: {
       color: red[400],
-      "&$checked": {
-        color: red[600],
-      },
     },
   })
 );
 
-enum IssueStateFilter {
+export enum IssueStateFilter {
   open = "open",
   closed = "closed",
   both = "both",
 }
 
-export const Search: React.FC<{}> = () => {
+export const Search: React.FC<{
+  issueStateFilter: IssueStateFilter;
+  setIssueStateFilter: React.Dispatch<React.SetStateAction<IssueStateFilter>>;
+  issueTextFilter: string;
+  setIssueTextFilter: React.Dispatch<React.SetStateAction<string>>;
+}> = ({
+  issueStateFilter,
+  setIssueStateFilter,
+  issueTextFilter,
+  setIssueTextFilter,
+}) => {
   const classes = useStyles();
 
-  const [issueStateFilter, setIssueStateFilter] = React.useState<
-    IssueStateFilter
-  >(IssueStateFilter.both);
+  const [currentSearchValue, setCurrentSearchValue] = React.useState<string>(
+    ""
+  );
 
   return (
     <div className={classes.root}>
-      <SearchBar />
+      <SearchBar
+        cancelOnEscape={true}
+        value={issueTextFilter}
+        onChange={(value): void => setCurrentSearchValue(value)}
+        onRequestSearch={(): void => setIssueTextFilter(currentSearchValue)}
+        onCancelSearch={(): void => {
+          console.log("cancel");
+          setIssueTextFilter("");
+          setCurrentSearchValue("");
+        }}
+      />
       <FormControl component="fieldset" className={classes.issueStateFilter}>
         <RadioGroup
           row
