@@ -101,7 +101,7 @@ export const Settings: React.FC<{}> = () => (
 
       <GithubSettingsTextField
         fieldName="githubToken"
-        fieldDefaultValue={defaultGitHubRepository}
+        fieldDefaultValue={""}
         fieldRegex={new RegExp("(.+)")}
         id="githubToken"
         label="GitHub personal access token"
