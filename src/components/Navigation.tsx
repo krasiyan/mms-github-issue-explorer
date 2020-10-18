@@ -5,10 +5,11 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { AppBar, Button, Toolbar, Typography, Grid } from "@material-ui/core";
 import { Settings, GitHub } from "@material-ui/icons";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     appBar: {
       color: "#fff",
+      marginBottom: theme.spacing(3),
     },
     title: {
       "text-transform": "none",

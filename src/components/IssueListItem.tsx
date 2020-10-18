@@ -9,13 +9,14 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
-import { Comment, ErrorOutline } from "@material-ui/icons";
+import { Comment, ErrorOutline, CheckCircleOutline } from "@material-ui/icons";
+import { green, red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       minWidth: 275,
-      margin: `${theme.spacing(2)}px auto`,
+      margin: `0px auto ${theme.spacing(2)}px auto`,
     },
     cardContent: {
       paddingLeft: 0,
@@ -27,15 +28,37 @@ const useStyles = makeStyles((theme: Theme) =>
     subTitle: {
       fontSize: 12,
     },
+    issueOpenIcon: {
+      color: green[400],
+    },
+    issueClosedIcon: {
+      color: red[600],
+    },
   })
 );
 
-export const IssueListItem: React.FC<{}> = () => {
+interface IssueProps {
+  number: number;
+  title: string;
+  state: "OPEN" | "CLOSED";
+  createdAt: string;
+  authorLogin: string;
+  totalCommentCount: number;
+}
+
+export const IssueListItem: React.FC<IssueProps> = ({
+  number,
+  title,
+  state,
+  createdAt,
+  authorLogin,
+  totalCommentCount,
+}) => {
   const classes = useStyles();
 
   return (
     <Card className={classes.root} variant="outlined">
-      <CardActionArea component={RouterLink} to="/123">
+      <CardActionArea component={RouterLink} to={`/${number}`}>
         <CardContent className={classes.cardContent}>
           <Grid container justify="space-between" alignItems="stretch">
             <Grid
@@ -46,7 +69,11 @@ export const IssueListItem: React.FC<{}> = () => {
               alignItems="center"
               justify="center"
             >
-              <ErrorOutline />
+              {state === "OPEN" ? (
+                <ErrorOutline className={classes.issueOpenIcon} />
+              ) : (
+                <CheckCircleOutline className={classes.issueClosedIcon} />
+              )}
             </Grid>
             <Grid
               item
@@ -58,10 +85,10 @@ export const IssueListItem: React.FC<{}> = () => {
               direction="column"
             >
               <Typography variant="h6" component="h2">
-                mock issue
+                {title}
               </Typography>
               <Typography className={classes.subTitle} color="textSecondary">
-                #111111 opened X days ago by krasiyan
+                #{number} opened on {createdAt} by {authorLogin}
               </Typography>
             </Grid>
             <Grid
@@ -74,7 +101,7 @@ export const IssueListItem: React.FC<{}> = () => {
               alignItems="center"
             >
               <Comment />
-              <Typography variant="body2">100</Typography>
+              <Typography variant="body2">{totalCommentCount}</Typography>
             </Grid>
           </Grid>
         </CardContent>
