@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "058e957e1b9f9bbf606be9f1f9e0514c",
+    "revision": "42027798ff3e6286c05c14a9fcc05728",
     "url": "/mms-github-issue-explorer/index.html"
   },
   {
-    "revision": "fe9c05181ca6e51c1835",
+    "revision": "79ee16d70f8206ced9f3",
     "url": "/mms-github-issue-explorer/static/css/2.ca8a36a0.chunk.css"
   },
   {
-    "revision": "2842930daf9e32d68dce",
+    "revision": "e12620aed0aebe0a137a",
     "url": "/mms-github-issue-explorer/static/css/main.f04a0b5b.chunk.css"
   },
   {
-    "revision": "fe9c05181ca6e51c1835",
-    "url": "/mms-github-issue-explorer/static/js/2.162b273c.chunk.js"
+    "revision": "79ee16d70f8206ced9f3",
+    "url": "/mms-github-issue-explorer/static/js/2.85ec5d52.chunk.js"
   },
   {
     "revision": "5c6bd70943e0d1d52a2109315fcb1511",
-    "url": "/mms-github-issue-explorer/static/js/2.162b273c.chunk.js.LICENSE.txt"
+    "url": "/mms-github-issue-explorer/static/js/2.85ec5d52.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "2842930daf9e32d68dce",
-    "url": "/mms-github-issue-explorer/static/js/main.42c9e94d.chunk.js"
+    "revision": "e12620aed0aebe0a137a",
+    "url": "/mms-github-issue-explorer/static/js/main.ad6fc4bb.chunk.js"
   },
   {
     "revision": "3f92685fcfe940fd4457",
