@@ -4,3 +4,6 @@ export const githubRepositoryRegex = new RegExp(
   "^https?://github.com/(?<owner>.+?)/(?<name>.+?)(?:/|$)"
 );
 export const githubGraphQLEndpoint = "https://api.github.com/graphql";
+// polling interval for re-fetching the newest set of results
+// (in the issues and comments lists)
+export const graphQLPollingInterval = 30000;

@@ -4,6 +4,7 @@ import { useQuery, gql } from "@apollo/client";
 import { LinearProgress } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
+import { graphQLPollingInterval } from "../config";
 import { Search, IssueStateFilter } from "./Search";
 import { IssueListItem } from "./IssueListItem";
 import { LoadMore } from "./LoadMore";
@@ -56,22 +57,44 @@ const IssueListItems: React.FC<{
     `is:issue`,
     `sort:created`,
     issueTextFilter,
+    ...(issueStateFilter === IssueStateFilter.open ? ["is:open"] : []),
+    ...(issueStateFilter === IssueStateFilter.closed ? ["is:closed"] : []),
   ];
 
-  if (issueStateFilter === IssueStateFilter.open) {
-    query.push("is:open");
-  } else if (issueStateFilter === IssueStateFilter.closed) {
-    query.push("is:closed");
-  }
+  const {
+    loading,
+    error,
+    data,
+    fetchMore,
+    startPolling,
+    stopPolling,
+  } = useQuery<GQLSearchIssues>(issuesQuery, {
+    variables: {
+      query: query.join(" "),
+    },
+  });
 
-  const { loading, error, data, fetchMore } = useQuery<GQLSearchIssues>(
-    issuesQuery,
-    {
-      variables: {
-        query: query.join(" "),
-      },
+  // Once data is loaded - poll for new issues (re-run the query periodically)
+  // TODO: pass the `before` param to the GQL query based on the data.search.pageInfo.startCursor
+  // (so that existing data is not re-fetched)
+  // Can be implemented once either of these Apollo client features are implemented:
+  // https://github.com/apollographql/apollo-feature-requests/issues/176
+  // https://github.com/apollographql/apollo-feature-requests/issues/226
+  React.useEffect(() => {
+    if (
+      graphQLPollingInterval > 0 &&
+      !loading &&
+      data &&
+      data?.search?.edges?.length > 0
+    ) {
+      startPolling(graphQLPollingInterval);
+      console.log("start");
+      return (): void => {
+        console.log("stop");
+        stopPolling();
+      };
     }
-  );
+  }, [loading, data, startPolling, stopPolling]);
 
   if (loading) return <LinearProgress />;
   if (error) return <Error error={error} />;
