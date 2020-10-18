@@ -6,26 +6,35 @@ import { Alert, AlertTitle } from "@material-ui/lab";
 
 import { Search, IssueStateFilter } from "./Search";
 import { IssueListItem } from "./IssueListItem";
+import { LoadMore } from "./LoadMore";
 import { Error } from "./Error";
-import { GithubConfig, GQLListIssues } from "./types";
+import { GithubConfig, GQLSearchIssues } from "./types";
 
 const issuesQuery = gql`
-  query SearchIssues($query: String!) {
-    search(type: ISSUE, query: $query, last: 100) {
-      nodes {
-        ... on Issue {
-          author {
-            login
+  query SearchIssues($query: String!, $after: String) {
+    search(type: ISSUE, query: $query, last: 10, after: $after) {
+      edges {
+        node {
+          ... on Issue {
+            author {
+              login
+            }
+            comments {
+              totalCount
+            }
+            id
+            number
+            state
+            title
+            createdAt
           }
-          comments {
-            totalCount
-          }
-          id
-          number
-          state
-          title
-          createdAt
         }
+      }
+      pageInfo {
+        startCursor
+        hasPreviousPage
+        hasNextPage
+        endCursor
       }
     }
   }
@@ -55,32 +64,45 @@ const IssueListItems: React.FC<{
     query.push("is:closed");
   }
 
-  const { loading, error, data } = useQuery<GQLListIssues>(issuesQuery, {
-    variables: {
-      query: query.join(" "),
-    },
-  });
+  const { loading, error, data, fetchMore } = useQuery<GQLSearchIssues>(
+    issuesQuery,
+    {
+      variables: {
+        query: query.join(" "),
+      },
+    }
+  );
 
   if (loading) return <LinearProgress />;
   if (error) return <Error error={error} />;
-  if (!data || data.search.nodes.length === 0)
+  if (!data || data.search.edges.length === 0)
     return (
       <Alert severity="info">
         <AlertTitle>No issues found</AlertTitle>
       </Alert>
     );
 
+  const fetchMoreIssues = (): void => {
+    fetchMore({
+      variables: {
+        after: data.search.pageInfo.endCursor,
+      },
+    });
+  };
+
   return (
     <>
-      {data.search.nodes.map(
+      {data.search.edges.map(
         ({
-          id,
-          number,
-          title,
-          state,
-          createdAt,
-          author: { login: authorLogin },
-          comments: { totalCount: totalCommentCount },
+          node: {
+            id,
+            number,
+            title,
+            state,
+            createdAt,
+            author: { login: authorLogin },
+            comments: { totalCount: totalCommentCount },
+          },
         }) => (
           <IssueListItem
             {...{
@@ -94,6 +116,9 @@ const IssueListItems: React.FC<{
             key={id}
           />
         )
+      )}
+      {data.search.pageInfo.hasNextPage && (
+        <LoadMore loadMore={fetchMoreIssues} />
       )}
     </>
   );

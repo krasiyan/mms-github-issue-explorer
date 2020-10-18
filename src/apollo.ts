@@ -46,6 +46,12 @@ export const createApolloClient = (): ApolloClient<NormalizedCacheObject> => {
             comments: relayStylePagination([["issueNumber"]]),
           },
         },
+        Query: {
+          fields: {
+            // pagination policy for issue search/list
+            search: relayStylePagination(["query"]),
+          },
+        },
       },
     }),
     connectToDevTools: true,

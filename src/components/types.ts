@@ -18,7 +18,7 @@ interface PageInfo {
   endCursor: string;
 }
 
-interface GQLListIssue {
+interface GQLSearchIssue {
   createdAt: string;
   state: "OPEN" | "CLOSED";
   comments: {
@@ -30,13 +30,18 @@ interface GQLListIssue {
   id: string;
 }
 
-export interface GQLListIssues {
+interface GQLSearchIssueEdge {
+  node: GQLSearchIssue;
+}
+
+export interface GQLSearchIssues {
   search: {
-    nodes: GQLListIssue[];
+    edges: GQLSearchIssueEdge[];
+    pageInfo: PageInfo;
   };
 }
 
-interface GQLIssue extends GQLListIssue {
+interface GQLIssue extends GQLSearchIssue {
   url: string;
   author: Author;
   bodyHTML: string;
