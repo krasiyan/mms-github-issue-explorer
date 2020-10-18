@@ -6,3 +6,9 @@ export interface GithubConfig {
   repositoryOwner?: string;
   repositoryName?: string;
 }
+
+export enum IssueStateFilter {
+  open = "open",
+  closed = "closed",
+  both = "both",
+}

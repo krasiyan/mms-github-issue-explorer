@@ -1,14 +1,16 @@
 import React from "react";
 
-import { useQuery } from "@apollo/client";
+import { useQuery, useReactiveVar } from "@apollo/client";
+
 import { LinearProgress } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
+import { issueTextFilter, issueStateFilter } from "../apollo";
 import { graphQLPollingInterval } from "../config";
 import { SearchIssues, SearchIssuesRes } from "../graphql";
-import { GithubConfig } from "../types";
+import { GithubConfig, IssueStateFilter } from "../types";
 
-import { Search, IssueStateFilter } from "./Search";
+import { Search } from "./Search";
 import { IssueListItem } from "./IssueListItem";
 import { LoadMore } from "./LoadMore";
 import { Error } from "./Error";
@@ -16,21 +18,18 @@ import { Error } from "./Error";
 const IssueListItems: React.FC<{
   githubRepositoryOwner: string;
   githubRepositoryName: string;
-  issueStateFilter: IssueStateFilter;
-  issueTextFilter: string;
-}> = ({
-  githubRepositoryOwner,
-  githubRepositoryName,
-  issueStateFilter,
-  issueTextFilter,
-}) => {
+}> = ({ githubRepositoryOwner, githubRepositoryName }) => {
   const query: string[] = [
     `repo:${githubRepositoryOwner}/${githubRepositoryName}`,
     `is:issue`,
     `sort:created`,
-    issueTextFilter,
-    ...(issueStateFilter === IssueStateFilter.open ? ["is:open"] : []),
-    ...(issueStateFilter === IssueStateFilter.closed ? ["is:closed"] : []),
+    useReactiveVar(issueTextFilter),
+    ...(useReactiveVar(issueStateFilter) === IssueStateFilter.open
+      ? ["is:open"]
+      : []),
+    ...(useReactiveVar(issueStateFilter) === IssueStateFilter.closed
+      ? ["is:closed"]
+      : []),
   ];
 
   const {
@@ -120,28 +119,13 @@ const IssueListItems: React.FC<{
 export const IssueList: React.FC<{
   githubConfig: Required<GithubConfig>;
 }> = ({ githubConfig }) => {
-  const [issueStateFilter, setIssueStateFilter] = React.useState<
-    IssueStateFilter
-  >(IssueStateFilter.both);
-
-  const [issueTextFilter, setIssueTextFilter] = React.useState<string>("");
-
   return (
     <>
-      <Search
-        {...{
-          issueStateFilter,
-          setIssueStateFilter,
-          issueTextFilter,
-          setIssueTextFilter,
-        }}
-      />
+      <Search />
       <IssueListItems
         {...{
           githubRepositoryName: githubConfig.repositoryName,
           githubRepositoryOwner: githubConfig.repositoryOwner,
-          issueStateFilter,
-          issueTextFilter,
         }}
       />
     </>

@@ -3,6 +3,7 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
   createHttpLink,
+  makeVar,
 } from "@apollo/client";
 
 import { setContext } from "@apollo/client/link/context";
@@ -10,6 +11,7 @@ import { relayStylePagination } from "@apollo/client/utilities";
 
 import { githubGraphQLEndpoint } from "./config";
 import { readKeyFromLocalStorage } from "./helpers";
+import { IssueStateFilter } from "./types";
 
 export const createApolloClient = (): ApolloClient<NormalizedCacheObject> => {
   const httpLink = createHttpLink({
@@ -57,3 +59,9 @@ export const createApolloClient = (): ApolloClient<NormalizedCacheObject> => {
     connectToDevTools: true,
   });
 };
+
+// reactive search filter parameters
+export const issueStateFilter = makeVar<IssueStateFilter>(
+  IssueStateFilter.both
+);
+export const issueTextFilter = makeVar<string>("");
