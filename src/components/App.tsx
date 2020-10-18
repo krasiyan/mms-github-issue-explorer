@@ -10,7 +10,7 @@ import { IssueList } from "./IssueList";
 import { Issue } from "./Issue";
 import { UnauthenticatedError, GithubRepositoryConfigError } from "./Error";
 
-import { readKeyFromLocalStorage } from "../helpers";
+import { useStickyState } from "../helpers";
 import { defaultGitHubRepository, githubRepositoryRegex } from "../config";
 import { GithubConfig } from "./types";
 
@@ -28,17 +28,23 @@ const AuthWrapper: React.FC<{
 };
 
 export const App: React.FC<{}> = () => {
-  const githubRepositoryUrl = readKeyFromLocalStorage(
-    "githubRepository",
+  const [githubRepositoryUrl, setGithubRepositoryUrl] = useStickyState<string>(
+    "githubRepositoryUrl",
     defaultGitHubRepository
   );
+  const [githubToken, setGithubToken] = useStickyState<string>(
+    "githubToken",
+    ""
+  );
+
   const githubRepositoryMatch = githubRepositoryUrl.match(
     githubRepositoryRegex
   );
-
   const githubConfig: GithubConfig = {
-    token: readKeyFromLocalStorage("githubToken", undefined),
+    token: githubToken,
+    setToken: setGithubToken,
     repositoryUrl: githubRepositoryUrl,
+    setRepositoryUrl: setGithubRepositoryUrl,
     repositoryOwner: githubRepositoryMatch?.groups?.owner,
     repositoryName: githubRepositoryMatch?.groups?.name,
   };
@@ -58,7 +64,7 @@ export const App: React.FC<{}> = () => {
       <Container maxWidth="md">
         <Switch>
           <Route path="/settings">
-            <Settings />
+            <Settings githubConfig={githubConfig} />
           </Route>
           <Route path="/:issueNumber">
             <AuthWrapper githubConfig={githubConfig}>
