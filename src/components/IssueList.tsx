@@ -88,9 +88,7 @@ const IssueListItems: React.FC<{
       data?.search?.edges?.length > 0
     ) {
       startPolling(graphQLPollingInterval);
-      console.log("start");
       return (): void => {
-        console.log("stop");
         stopPolling();
       };
     }
