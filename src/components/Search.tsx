@@ -1,6 +1,9 @@
 import React from "react";
 
+import { useReactiveVar } from "@apollo/client";
 import SearchBar from "material-ui-search-bar";
+
+import { issueTextFilter, issueStateFilter } from "../apollo";
 
 import {
   FormControl,
@@ -36,17 +39,7 @@ export enum IssueStateFilter {
   both = "both",
 }
 
-export const Search: React.FC<{
-  issueStateFilter: IssueStateFilter;
-  setIssueStateFilter: React.Dispatch<React.SetStateAction<IssueStateFilter>>;
-  issueTextFilter: string;
-  setIssueTextFilter: React.Dispatch<React.SetStateAction<string>>;
-}> = ({
-  issueStateFilter,
-  setIssueStateFilter,
-  issueTextFilter,
-  setIssueTextFilter,
-}) => {
+export const Search: React.FC<{}> = () => {
   const classes = useStyles();
 
   const [currentSearchValue, setCurrentSearchValue] = React.useState<string>(
@@ -57,12 +50,14 @@ export const Search: React.FC<{
     <div className={classes.root}>
       <SearchBar
         cancelOnEscape={true}
-        value={issueTextFilter}
+        value={useReactiveVar(issueTextFilter)}
         onChange={(value): void => setCurrentSearchValue(value)}
-        onRequestSearch={(): void => setIssueTextFilter(currentSearchValue)}
+        onRequestSearch={(): void => {
+          issueTextFilter(currentSearchValue);
+        }}
         onCancelSearch={(): void => {
           console.log("cancel");
-          setIssueTextFilter("");
+          issueTextFilter("");
           setCurrentSearchValue("");
         }}
       />
@@ -71,12 +66,12 @@ export const Search: React.FC<{
           row
           aria-label="issueStateFilter"
           name="issueStateFilter"
-          value={issueStateFilter}
+          value={useReactiveVar(issueStateFilter)}
           onChange={({
             target: { value },
-          }: React.ChangeEvent<HTMLInputElement>): void =>
-            setIssueStateFilter(value as IssueStateFilter)
-          }
+          }: React.ChangeEvent<HTMLInputElement>): void => {
+            issueStateFilter(value as IssueStateFilter);
+          }}
         >
           <FormControlLabel
             value="open"
