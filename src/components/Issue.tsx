@@ -1,41 +1,17 @@
 import React from "react";
 
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
-
 import { LinearProgress } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
+import { GetIssue, GetIssueRes } from "../graphql";
 import { Error } from "./Error";
+import { GithubConfig } from "../types";
+
 import { IssueCommentList } from "./IssueCommentList";
 import { IssueComment } from "./IssueComment";
-import { GithubConfig, GQLGetIssue } from "./types";
-
-const issueQuery = gql`
-  query GetIssue(
-    $githubRepositoryName: String!
-    $githubRepositoryOwner: String!
-    $issueNumber: Int!
-  ) {
-    repository(name: $githubRepositoryName, owner: $githubRepositoryOwner) {
-      issue(number: $issueNumber) {
-        id
-        number
-        state
-        title
-        url
-        author {
-          avatarUrl(size: 40)
-          login
-          url
-        }
-        bodyHTML
-        createdAt
-      }
-    }
-  }
-`;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,7 +29,7 @@ export const Issue: React.FC<{
   const { issueNumber: issueNumberParam } = useParams();
   const issueNumber = parseInt(issueNumberParam, 10);
 
-  const { loading, error, data } = useQuery<GQLGetIssue>(issueQuery, {
+  const { loading, error, data } = useQuery<GetIssueRes>(GetIssue, {
     variables: {
       githubRepositoryOwner: githubConfig.repositoryOwner,
       githubRepositoryName: githubConfig.repositoryName,
