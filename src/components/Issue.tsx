@@ -3,27 +3,13 @@ import React from "react";
 import { useQuery, gql } from "@apollo/client";
 import { useParams } from "react-router-dom";
 
-import {
-  Avatar,
-  Card,
-  CardContent,
-  CardHeader,
-  Chip,
-  Grid,
-  IconButton,
-  LinearProgress,
-  Link,
-  Typography,
-} from "@material-ui/core";
-import {} from "@material-ui/core";
+import { LinearProgress } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { ErrorOutline, CheckCircleOutline, GitHub } from "@material-ui/icons";
-import { green, red } from "@material-ui/core/colors";
 
 import { Error } from "./Error";
-import { IssueComments } from "./IssueComments";
-import { CommentBody } from "./CommentBody";
+import { IssueCommentList } from "./IssueCommentList";
+import { IssueComment } from "./IssueComment";
 import { GithubConfig, GQLGetIssue } from "./types";
 
 const issueQuery = gql`
@@ -56,22 +42,6 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       paddingBottom: theme.spacing(5),
     },
-    firstComment: {
-      marginBottom: theme.spacing(1),
-    },
-    issueStatusChip: {
-      color: "white",
-      marginLeft: theme.spacing(1),
-    },
-    issueStatusChipOpen: {
-      backgroundColor: green[400],
-    },
-    issueStatusChipClosed: {
-      backgroundColor: red[600],
-    },
-    issueStatusIcon: {
-      color: "white",
-    },
   })
 );
 
@@ -103,65 +73,22 @@ export const Issue: React.FC<{
 
   return (
     <div className={classes.root}>
-      <Card variant="outlined" className={classes.firstComment}>
-        <CardHeader
-          avatar={
-            <Avatar alt={issue.author.login} src={issue.author.avatarUrl}>
-              {issue.author.login.substr(0, 1)}
-            </Avatar>
-          }
-          action={
-            <IconButton
-              aria-label="settings"
-              component={Link}
-              href={issue.url}
-              target="_blank"
-              rel="noopener"
-              color="primary"
-            >
-              <Grid container direction="column" alignItems="center">
-                <GitHub />
-                <Typography variant="body2">#{issue.number}</Typography>
-              </Grid>
-            </IconButton>
-          }
-          title={issue.title}
-          titleTypographyProps={{ variant: "h5" }}
-          subheader={
-            <Grid container alignItems="center">
-              <Typography display="inline">
-                by{" "}
-                <Link href={issue.author.url} target="_blank" rel="noopener">
-                  {issue.author.login}
-                </Link>{" "}
-                on {issue.createdAt}
-              </Typography>
-              {issue.state === "OPEN" ? (
-                <Chip
-                  label="Open"
-                  size="small"
-                  icon={<ErrorOutline className={classes.issueStatusIcon} />}
-                  className={`${classes.issueStatusChip} ${classes.issueStatusChipOpen}`}
-                />
-              ) : (
-                <Chip
-                  label="Closed"
-                  size="small"
-                  icon={
-                    <CheckCircleOutline className={classes.issueStatusIcon} />
-                  }
-                  className={`${classes.issueStatusChip} ${classes.issueStatusChipClosed}`}
-                />
-              )}
-            </Grid>
-          }
-        />
-        <CardContent>
-          <CommentBody bodyHTML={issue.bodyHTML} />
-        </CardContent>
-      </Card>
+      <IssueComment
+        {...{
+          isRootComment: true,
+          issueNumber,
+          issueStatus: issue.state,
+          issueTitle: issue.title,
+          issueUrl: issue.url,
+          createdAt: issue.createdAt,
+          authorLogin: issue.author.login,
+          authorUrl: issue.author.url,
+          authorAvatarUrl: issue.author.avatarUrl,
+          bodyHTML: issue.bodyHTML,
+        }}
+      />
 
-      <IssueComments githubConfig={githubConfig} issueNumber={issueNumber} />
+      <IssueCommentList githubConfig={githubConfig} issueNumber={issueNumber} />
     </div>
   );
 };

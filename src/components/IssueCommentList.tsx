@@ -44,7 +44,7 @@ const commentsQuery = gql`
   }
 `;
 
-export const IssueComments: React.FC<{
+export const IssueCommentList: React.FC<{
   githubConfig: Required<GithubConfig>;
   issueNumber: number;
 }> = ({ githubConfig, issueNumber }) => {
@@ -93,6 +93,7 @@ export const IssueComments: React.FC<{
         }) => (
           <IssueComment
             {...{
+              isRootComment: false,
               createdAt,
               authorLogin,
               authorUrl,
