@@ -1,45 +1,17 @@
 import React from "react";
 
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { LinearProgress } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
 import { graphQLPollingInterval } from "../config";
+import { SearchIssues, SearchIssuesRes } from "../graphql";
+import { GithubConfig } from "../types";
+
 import { Search, IssueStateFilter } from "./Search";
 import { IssueListItem } from "./IssueListItem";
 import { LoadMore } from "./LoadMore";
 import { Error } from "./Error";
-import { GithubConfig, GQLSearchIssues } from "./types";
-
-const issuesQuery = gql`
-  query SearchIssues($query: String!, $after: String) {
-    search(type: ISSUE, query: $query, last: 10, after: $after) {
-      edges {
-        node {
-          ... on Issue {
-            author {
-              login
-            }
-            comments {
-              totalCount
-            }
-            id
-            number
-            state
-            title
-            createdAt
-          }
-        }
-      }
-      pageInfo {
-        startCursor
-        hasPreviousPage
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-`;
 
 const IssueListItems: React.FC<{
   githubRepositoryOwner: string;
@@ -68,7 +40,7 @@ const IssueListItems: React.FC<{
     fetchMore,
     startPolling,
     stopPolling,
-  } = useQuery<GQLSearchIssues>(issuesQuery, {
+  } = useQuery<SearchIssuesRes>(SearchIssues, {
     variables: {
       query: query.join(" "),
     },

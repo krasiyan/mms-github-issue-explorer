@@ -3,8 +3,8 @@ import { Link as RouterLink } from "react-router-dom";
 
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { Link, Typography } from "@material-ui/core";
-
 import { ApolloError } from "@apollo/client";
+
 import { repository as packageRepository } from "../../package.json";
 
 const ErrorDetails: React.FC<{ details: string }> = ({ details }) => (

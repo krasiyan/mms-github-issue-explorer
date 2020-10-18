@@ -1,19 +1,18 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ApolloProvider } from "@apollo/client";
-
 import { Container } from "@material-ui/core";
 
+import { useStickyState } from "../helpers";
+import { defaultGitHubRepository, githubRepositoryRegex } from "../config";
+import { GithubConfig } from "../types";
 import { createApolloClient } from "../apollo";
+
 import { Navigation } from "./Navigation";
 import { Settings } from "./Settings";
 import { IssueList } from "./IssueList";
 import { Issue } from "./Issue";
 import { UnauthenticatedError, GithubRepositoryConfigError } from "./Error";
-
-import { useStickyState } from "../helpers";
-import { defaultGitHubRepository, githubRepositoryRegex } from "../config";
-import { GithubConfig } from "./types";
 import "./app.css";
 
 const AuthWrapper: React.FC<{

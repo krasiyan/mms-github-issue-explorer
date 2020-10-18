@@ -1,55 +1,22 @@
 import React from "react";
 
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { LinearProgress } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
+
+import { GetIssueComments, GetIssueCommentsRes } from "../graphql";
+import { GithubConfig } from "../types";
 
 import { IssueComment } from "./IssueComment";
 import { LoadMore } from "./LoadMore";
 import { Error } from "./Error";
-import { GithubConfig, GQLIssueComments } from "./types";
-
-const commentsQuery = gql`
-  query GetIssueComments(
-    $githubRepositoryName: String!
-    $githubRepositoryOwner: String!
-    $issueNumber: Int!
-    $after: String
-  ) {
-    repository(name: $githubRepositoryName, owner: $githubRepositoryOwner) {
-      issue(number: $issueNumber) {
-        id
-        comments(first: 10, after: $after) {
-          edges {
-            node {
-              id
-              createdAt
-              author {
-                login
-                avatarUrl
-                url
-              }
-              bodyHTML
-            }
-          }
-          pageInfo {
-            startCursor
-            hasPreviousPage
-            hasNextPage
-            endCursor
-          }
-        }
-      }
-    }
-  }
-`;
 
 export const IssueCommentList: React.FC<{
   githubConfig: Required<GithubConfig>;
   issueNumber: number;
 }> = ({ githubConfig, issueNumber }) => {
-  const { loading, error, data, fetchMore } = useQuery<GQLIssueComments>(
-    commentsQuery,
+  const { loading, error, data, fetchMore } = useQuery<GetIssueCommentsRes>(
+    GetIssueComments,
     {
       variables: {
         githubRepositoryName: githubConfig.repositoryName,
