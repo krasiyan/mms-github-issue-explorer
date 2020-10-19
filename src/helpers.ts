@@ -5,9 +5,13 @@ export const readKeyFromLocalStorage = <T>(
   defaultValue: T
 ): T => {
   const localStorageValue = localStorage.getItem(localStorageKey);
-  return localStorageValue
-    ? (JSON.parse(localStorageValue) as T)
-    : defaultValue;
+  try {
+    return localStorageValue
+      ? (JSON.parse(localStorageValue) as T)
+      : defaultValue;
+  } catch {
+    return defaultValue;
+  }
 };
 
 export const useStickyState = <T>(

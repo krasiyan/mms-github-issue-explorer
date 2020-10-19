@@ -28,7 +28,7 @@ export interface IssuePreview {
   id: string;
 }
 
-export interface Issue extends IssuePreview {
+export interface Issue extends Omit<IssuePreview, "comments"> {
   url: string;
   author: Author;
   bodyHTML: string;
