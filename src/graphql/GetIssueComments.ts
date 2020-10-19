@@ -37,7 +37,7 @@ export const GetIssueComments = gql`
   }
 `;
 
-interface IssueComment {
+export interface IssueComment {
   id: string;
   createdAt: string;
   author: Author;

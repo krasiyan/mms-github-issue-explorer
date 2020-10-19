@@ -31,7 +31,7 @@ export const IssueCommentList: React.FC<{
   if (!data || data.repository.issue.comments.edges.length === 0)
     return (
       <Alert severity="info">
-        <AlertTitle>No comments yets</AlertTitle>
+        <AlertTitle>No comments yet</AlertTitle>
       </Alert>
     );
 
