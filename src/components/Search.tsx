@@ -46,7 +46,11 @@ export const Search: React.FC<{}> = () => {
       <SearchBar
         cancelOnEscape={true}
         value={useReactiveVar(issueTextFilter)}
-        onChange={(value): void => setCurrentSearchValue(value)}
+        onChange={(value): void => {
+          setCurrentSearchValue(value);
+          // trigger the filter change is the field is wiped out
+          if (!value) issueTextFilter("");
+        }}
         onRequestSearch={(): void => {
           issueTextFilter(currentSearchValue);
         }}
