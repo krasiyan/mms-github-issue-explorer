@@ -4,7 +4,6 @@ import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { LinearProgress } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import { GetIssue, GetIssueRes } from "../graphql";
 import { Error } from "./Error";
@@ -13,19 +12,9 @@ import { GithubConfig } from "../types";
 import { IssueCommentList } from "./IssueCommentList";
 import { IssueComment } from "./IssueComment";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      paddingBottom: theme.spacing(5),
-    },
-  })
-);
-
 export const Issue: React.FC<{
   githubConfig: Required<GithubConfig>;
 }> = ({ githubConfig }) => {
-  const classes = useStyles();
-
   const { issueNumber: issueNumberParam } = useParams();
   const issueNumber = parseInt(issueNumberParam, 10);
 
@@ -48,7 +37,7 @@ export const Issue: React.FC<{
   const { issue } = data.repository;
 
   return (
-    <div className={classes.root}>
+    <div>
       <IssueComment
         {...{
           isRootComment: true,
