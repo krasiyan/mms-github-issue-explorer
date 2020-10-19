@@ -49,6 +49,18 @@ npm run check        # run all checkers
 - [`Search`](./src/components/Search.tsx) - Renders a search box as well as issue state filter (radio buttons).
 - [`Settings`](./src/components/Settings.tsx) - Renders the GitHub settings fields (repository URL and GitHub personal access token).
 
+# Potential improvements
+
+- The tests should be extended to cover error cases as well as the pagination/load more mechanism
+- Use https://graphql-code-generator.com/ to eliminate the manual GraphQL schema + type management. All GraphQL queries will be moved to standalone files and `useEffect` style query methods will be auto-generated. "Continuous/regular" CI schema building can be set up in order to easily see when/if the GitHub GraphQL schema changes.
+- GraphQL cache optimization:
+  - Potentially persist GraphQL's cache (polling or other refresh policies might have to be applied)
+- Misc UI/UX improvements:
+  - add more links to GitHub (i.e. for individual comments)
+  - comment date formatting
+- Potentially add "classical" pagination to the issue list
+- Improve the `IssueList` polling mechanism so that it only polls for the delta (new comments) using the `after` relay style GraphQL parameter
+
 # License
 
 [MIT](./LICENSE.md)
